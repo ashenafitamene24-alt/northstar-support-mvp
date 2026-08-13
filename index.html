@@ -3,9 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <title>Northstar Support Chatbot MVP</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Northstar Retail Co. - Support Chatbot</h1>
-  <p>Prototype initialization in progress...</p>
+  <div class="chat-widget">
+    <div class="chat-header">Northstar Retail Co.<span class="status-dot"></span>support
+    </div>
+       <div class="chat-messages" id="chat-messages">
+  <div class="message bot">
+    Hi! I'm star your Support Chatbot. How can I assist you today?
+  </div>
+</div>
+
+    <div class="chat-input">
+      <input 
+       type="text"
+       id="user-input"
+       placeholder="Type your message here..."
+       autocomplete="off" />
+      <button id="send-button">Send</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
