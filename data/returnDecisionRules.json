@@ -1,0 +1,46 @@
+{
+    "policyVersion": "2026-Q3",
+    "rules": {
+        "returnWindowDays": 30,
+        "nonReturnableCategories": [
+            "final_sale",
+            "intimate_apparel",
+            "gift_cards",
+            "perishable"
+        ],
+        "deductions": {
+            "restockingFeeStandard": 5.00,
+            "restockingFeeDamaged": 0.00
+        },
+        "refundTimelines": {
+            "original_payment": "3 to 5 business days after warehouse inspection",
+            "store_credit": "Issued within 24 hours of carrier scan"
+        }
+    },
+    "decisionTree": {
+        "step1_category": {
+            "condition": "isFinalSale === false",
+            "failureMessage": "Final sale items and gift cards are non-returnable."
+        },
+        "step2_timeWindow": {
+            "condition": "daysSinceDelivery <= 30",
+            "failureMessage": "Returns must be initiated within 30 days of delivery."
+        },
+        "step3_reason": {
+            "damaged_or_incorrect": {
+                "fee": 0.00,
+                "action": "free_prepaid_label",
+                "message": "We will cover 100% of return shipping for damaged or incorrect items."
+            },
+            "customer_preference": {
+                "fee": 5.00,
+                "action": "standard_label",
+                "message": "A $5.00 return shipping fee will be deducted from your total refund."
+            }
+        },
+        "step4_refundMethod": {
+            "original_payment": "Refunded in 3-5 business days after inspection.",
+            "store_credit": "Immediate store credit upon carrier scan."
+        }
+    }
+}
