@@ -9,19 +9,15 @@
   <div class="chat-widget">
     <div class="chat-header">Northstar Retail Co.<span class="status-dot"></span>online
     </div>
-       <div class="chat-messages" id="chat-messages">
-  <div class="message bot">
-    Hi! I'm star your Support Chatbot. How can I assist you today?
-  </div>
-</div>
+       <div class="chat-messages" id="chatMessages"></div>
 
     <div class="chat-input-row">
       <input 
        type="text"
-       id="user-input"
+       id="chatInput"
        placeholder="Type your message here..."
        autocomplete="off" />
-      <button id="send-button" aria-label="Send">
+      <button id="sendBtn" aria-label="Send">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke-width="2">>
           <path d="M2,20L21,12L3,4L3,12L3,14Z" fill="white" stroke="none"/>
         </svg>
@@ -29,6 +25,8 @@
     </div>
   </div>
 
+  <script src="js/orders.js"></script>
+  <script src="js/orderStatus.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

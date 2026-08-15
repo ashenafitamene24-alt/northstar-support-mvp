@@ -1,5 +1,32 @@
 // i member 2 will be writing the code for the dispaly
-//member 3 and 4 to define the functions<
+//member 3 and 4 to define the functions
+
+function handleOrderStatus(userText) {
+  const match = userText.match(/#?\d{4,6}/);
+  if (match) {
+    const result = getOrderStatus(match[0]);
+    if (result.found) {
+      let reply = result.message;
+      if (result.trackingNumber) reply += `\nTracking: ${result.trackingNumber} via ${result.carrier}`;
+      if (result.estimatedDelivery) reply += `\nEst. Delivery: ${result.estimatedDelivery}`;
+      return reply;
+    }
+    return result.message;
+  }
+  return "Please share your order number (e.g. #1001) so I can look that up for you.";
+}
+
+function handleReturnsRefunds(userText) {
+  const text = userText.toLowerCase();
+
+  if (text.includes("damaged") || text.includes("broken") || text.includes("defective")) {
+    return "Sorry about that! Please email support@northstarretail.com with photos of the damaged item and your order number. We'll send a replacement or full refund within 2 business days.";
+  }
+  if (text.includes("refund") && (text.includes("when") || text.includes("how long") || text.includes("status"))) {
+    return "Refunds are processed within 5–7 business days after we receive your return. Store credit is issued immediately.";
+  }
+  return "Northstar 30-Day Return Policy:\n1. Initiate return at northstarretail.com/returns within 30 days.\n2. Items must be unused in original packaging.\n3. A prepaid label will be emailed to you.\n4. Drop off at any FedEx or UPS location.\n5. Refund in 5–7 business days once received.";
+}
 
 const chatMessages = document.getElementById("chatMessages");
 const chatInput = document.getElementById("chatInput");
@@ -16,16 +43,16 @@ function getTimestamp() {
  
 function addMessage(text, sender) {
   const group = document.createElement("div");
-  group.classList.add("message-group", sender); // sender = "bot" or "user"
- 
+  group.classList.add("message-group", sender);
+
   const msg = document.createElement("div");
   msg.classList.add("message", sender);
   msg.textContent = text;
- 
+
   const time = document.createElement("div");
   time.classList.add("timestamp");
   time.textContent = getTimestamp();
- 
+
   group.appendChild(msg);
   group.appendChild(time);
   chatMessages.appendChild(group);
@@ -33,21 +60,23 @@ function addMessage(text, sender) {
 }
 function routeMessage(userText) {
   const text = userText.toLowerCase();
- 
-  const isOrderQuestion =
-    text.includes("order") || text.includes("shipped") || text.includes("where is");
- 
-  const isReturnQuestion =
-    text.includes("return") || text.includes("refund");
- 
-  if (isOrderQuestion && typeof handleOrderStatus === "function") {
+
+  // If message contains an order number, always route to order status
+  const hasOrderNumber = /#?\d{4,6}/.test(userText);
+  if (hasOrderNumber) {
     return handleOrderStatus(userText);
   }
- 
-  if (isReturnQuestion && typeof handleReturnsRefunds === "function") {
-    return handleReturnsRefunds(userText);
-  }
- 
+
+  const isOrderQuestion =
+    text.includes("order") || text.includes("shipped") || text.includes("where is") ||
+    text.includes("track") || text.includes("delivery") || text.includes("package");
+
+  const isReturnQuestion =
+    text.includes("return") || text.includes("refund") || text.includes("damaged");
+
+  if (isOrderQuestion) return handleOrderStatus(userText);
+  if (isReturnQuestion) return handleReturnsRefunds(userText);
+
   return "I can help with order status or returns & refunds. Could you rephrase your question?";
 }
  
